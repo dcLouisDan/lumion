@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int        @id @default(autoincrement())
+  email          String     @unique
+  name           String?
+  password       String
+  profilePicture String?
+  role           String     @default("USER") // ADMIN | EDITOR | USER
+  createdAt      DateTime   @default(now())
+  Post           Post[]
+  Comment        Comment[]
+  AuditLog       AuditLog[]
+  Media          Media[]
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  authorId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(false)
+
+  author     User       @relation(fields: [authorId], references: [id])
+  tags       Tag[]      @relation("PostTags")
+  categories Category[] @relation("PostCategories")
+  comments   Comment[]
+  Media      Media[]
+}
+
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  posts Post[] @relation("PostTags")
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  posts Post[] @relation("PostCategories")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  postId    Int
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  action    String // CREATE | UPDATE | DELETE
+  entity    String // POST | USER | COMMENT | TAG
+  entityId  Int
+  details   String
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Media {
+  id     Int    @id @default(autoincrement())
+  url    String
+  type   String
+  postId Int?
+  userId Int?
+
+  post Post? @relation(fields: [postId], references: [id])
+  user User? @relation(fields: [userId], references: [id])
+}
