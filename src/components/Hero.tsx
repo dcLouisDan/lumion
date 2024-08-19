@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { Anton } from "next/font/google";
 import React from "react";
 
@@ -7,6 +8,9 @@ export default function Hero() {
     <div className="py-16 text-center flex flex-col gap-4">
       <h1 className={anton.className + " text-7xl text-rose-700"}>Lumion</h1>
       <p className="text-2xl font-semibold">Illuminate your thoughts.</p>
+      <Button variant="contained" disableElevation>
+        Start Blogging
+      </Button>
     </div>
   );
 }

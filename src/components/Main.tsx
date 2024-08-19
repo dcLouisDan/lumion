@@ -1,0 +1,21 @@
+"use client";
+import { createTheme, ThemeProvider } from "@mui/material";
+import { blueGrey } from "@mui/material/colors";
+import React, { ReactNode } from "react";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#be123c",
+    },
+    secondary: blueGrey,
+  },
+});
+
+export default function Main({ children }: { children: ReactNode }) {
+  return (
+    <ThemeProvider theme={theme}>
+      <main>{children}</main>;
+    </ThemeProvider>
+  );
+}

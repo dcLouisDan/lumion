@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import { Roboto } from "next/font/google";
 import Header from "@/components/Header";
+import Main from "@/components/Main";
+import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const roboto = Roboto({ subsets: ["latin"], weight: ["300"] });
 
 export const metadata: Metadata = {
   title: "Lumion",
@@ -17,9 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={"w-full max-w-[1200px] mx-auto " + inter.className}>
-        <Header />
-        {children}
+      <body className={"w-full max-w-[1200px] mx-auto " + roboto.className}>
+        <Main>
+          <Header />
+          {children}
+        </Main>
       </body>
     </html>
   );
