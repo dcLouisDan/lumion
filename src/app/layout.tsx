@@ -4,7 +4,10 @@ import Header from "@/components/Header";
 import Main from "@/components/Main";
 import "./globals.css";
 
-const roboto = Roboto({ subsets: ["latin"], weight: ["300"] });
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "500", "700", "900"],
+});
 
 export const metadata: Metadata = {
   title: "Lumion",
@@ -18,7 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={"w-full max-w-[1200px] mx-auto " + roboto.className}>
+      <body
+        className={
+          "w-full max-w-[1200px] mx-auto flex flex-col h-screen " +
+          roboto.className
+        }
+      >
         <Main>
           <Header />
           {children}
