@@ -10,6 +10,16 @@ const theme = createTheme({
     },
     secondary: blueGrey,
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: "20px",
+          textTransform: "initial",
+        },
+      },
+    },
+  },
 });
 
 export default function Main({ children }: { children: ReactNode }) {
