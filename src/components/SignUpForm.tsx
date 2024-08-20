@@ -1,5 +1,6 @@
 "use client";
 
+import { registerUser } from "@/actions/user-actions";
 import { Lock, Mail, Person } from "@mui/icons-material";
 import { Button, InputAdornment, TextField } from "@mui/material";
 import React, { FormEvent, useEffect, useState } from "react";
@@ -24,6 +25,7 @@ export default function SignUpForm() {
     password: "",
     passwordRepeat: "",
   });
+  const [formErrors, setFormError] = useState<string | null>(null);
   const isFormIncomplete = Object.values(fields).some(
     (value) => value.trim() === ""
   );
@@ -69,8 +71,23 @@ export default function SignUpForm() {
     });
   }
 
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setFormError(null);
+
+    const response = await registerUser(fields);
+
+    if (!response.success) {
+      // setFormError(response.error);
+      console.log(response.error);
+      return;
+    }
+
+    console.log("Success");
+  }
+
   return (
-    <form action="" className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <TextField
         fullWidth
         variant="outlined"
@@ -148,7 +165,7 @@ export default function SignUpForm() {
       <Button
         variant="contained"
         disableElevation
-        type="button"
+        type="submit"
         disabled={isSubmitDisabled}
       >
         Create Account
