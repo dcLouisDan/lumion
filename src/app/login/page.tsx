@@ -1,7 +1,5 @@
-import { Button, InputAdornment, TextField } from "@mui/material";
 import { Metadata } from "next";
 import React from "react";
-import { Lock, Mail } from "@mui/icons-material";
 import Link from "next/link";
 import LightbulbMomentSVG from "@/components/LightbulbMomentSVG";
 import { Anton } from "next/font/google";
@@ -36,44 +34,6 @@ export default function LoginPage() {
         >
           Welcome back.
         </div>
-        <form action="" className="flex flex-col gap-4">
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Email"
-            color="primary"
-            type="email"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Mail color="primary" />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Password"
-            type="password"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock color="primary" />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Button variant="contained" disableElevation type="submit">
-            Login
-          </Button>
-        </form>
-        <Link
-          href="/reset-password"
-          className="mb-10 font-extrabold text-end py-2 text-rose-700 hover:text-rose-600 active:text-rose-400"
-        >
-          Forgot Password
-        </Link>
         <div className="flex gap-2 py-2 justify-center">
           <div>Don't have an account?</div>
           <Link

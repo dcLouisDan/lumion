@@ -1,10 +1,9 @@
-import { Button, InputAdornment, TextField } from "@mui/material";
 import { Metadata } from "next";
 import React from "react";
-import { Lock, Mail, Person } from "@mui/icons-material";
 import Link from "next/link";
 import LightbulbMomentSVG from "@/components/LightbulbMomentSVG";
 import { Anton } from "next/font/google";
+import SignUpForm from "@/components/SignUpForm";
 
 export const metadata: Metadata = {
   title: "Lumion - Login",
@@ -36,66 +35,7 @@ export default function SignupPage() {
         >
           Tell us about yourself.
         </div>
-        <form action="" className="flex flex-col gap-4">
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Name"
-            color="primary"
-            type="text"
-            required
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Person color="primary" />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Email"
-            color="primary"
-            type="email"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Mail color="primary" />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Password"
-            type="password"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock color="primary" />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Repeat Password"
-            type="password"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock color="primary" />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Button variant="contained" disableElevation type="submit">
-            Create Account
-          </Button>
-        </form>
+        <SignUpForm />
         <div className="flex mt-12 gap-2 py-2 justify-center">
           <div>Already have an account?</div>
           <Link
