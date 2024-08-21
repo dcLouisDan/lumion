@@ -5,7 +5,7 @@ import type { User } from "next-auth";
 import { signOut } from "next-auth/react";
 import { Anton } from "next/font/google";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import React from "react";
 
 const anton = Anton({ subsets: ["latin"], weight: ["400"] });
@@ -31,7 +31,7 @@ export default function Header({
   authUser?: User | null;
 }) {
   const pathname = usePathname();
-  const authPaths = ["/login", "/signup"];
+  const authPaths = ["/auth/login", "/auth/signup"];
   if (!authUser) {
     return (
       <header className="flex py-4 px-4 sm:px-2 items-center">
@@ -71,7 +71,7 @@ export default function Header({
             <Button
               variant="contained"
               disableElevation
-              onClick={() => signOut({ callbackUrl: "/" })}
+              onClick={() => signOut({ callbackUrl: "/auth/login" })}
             >
               Sign-out
             </Button>

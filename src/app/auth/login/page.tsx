@@ -6,6 +6,7 @@ import { Anton } from "next/font/google";
 import LoginForm from "@/components/LoginForm";
 import { getServerSession } from "next-auth";
 import { options } from "../../api/auth/[...nextauth]/options";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Lumion - Login",
@@ -14,6 +15,10 @@ export const metadata: Metadata = {
 const anton = Anton({ subsets: ["latin"], weight: ["400"] });
 
 export default async function LoginPage() {
+  const session = await getServerSession(options);
+  if (session) {
+    redirect("/dashboard");
+  }
   return (
     <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 h-full px-1 sm:px-5">
       <div className="hidden sm:block lg:col-span-2 relative">
