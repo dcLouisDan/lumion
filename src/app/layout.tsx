@@ -3,6 +3,9 @@ import { Roboto } from "next/font/google";
 import Header from "@/components/Header";
 import Main from "@/components/Main";
 import "./globals.css";
+import AuthProvider from "./context/AuthProvider";
+import { getServerSession } from "next-auth";
+import { options } from "./api/auth/[...nextauth]/options";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -14,11 +17,13 @@ export const metadata: Metadata = {
   description: "Illuminate your thoughts",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(options);
+  const authUser = session?.user;
   return (
     <html lang="en">
       <body
@@ -27,10 +32,12 @@ export default function RootLayout({
           roboto.className
         }
       >
-        <Main>
-          <Header />
-          {children}
-        </Main>
+        <AuthProvider>
+          <Main>
+            <Header authUser={authUser} />
+            {children}
+          </Main>
+        </AuthProvider>
       </body>
     </html>
   );

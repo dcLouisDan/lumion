@@ -1,6 +1,7 @@
 "use server"
 
 import prisma from "@/lib/db";
+import { bcrypt } from "@/lib/utils";
 
 
 type RegisterFormData = {
@@ -21,10 +22,8 @@ type HandleSubmitResponse = {
 };
 
 export async function registerUser(formData: RegisterFormData): Promise<HandleSubmitResponse> {
-
   try {
     const {name, email, password, passwordRepeat} = formData
-    const bcrypt = require('bcrypt')
 
     if (password !== passwordRepeat) {
       throw new Error("Passwords do not match.")

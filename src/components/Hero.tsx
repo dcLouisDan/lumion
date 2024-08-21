@@ -9,7 +9,7 @@ export default function Hero() {
     <div className="py-16 text-center flex flex-col gap-4">
       <h1 className={anton.className + " text-7xl text-rose-700"}>Lumion</h1>
       <p className="text-2xl font-semibold">Illuminate your thoughts.</p>
-      <Link href="/login">
+      <Link href="/auth/login">
         <Button
           variant="contained"
           disableElevation
