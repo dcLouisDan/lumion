@@ -31,7 +31,7 @@ function AuthorizedLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex-1 grid grid-cols-5">
       <SideNav />
-      <main className="colspan-4 px-5">{children}</main>
+      <main className="col-span-4 px-5">{children}</main>
     </div>
   );
 }

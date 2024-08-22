@@ -1,0 +1,23 @@
+import prisma from "@/lib/db";
+import { NextRequest } from "next/server";
+
+export async function GET(req: NextRequest) {
+
+  const page = req.nextUrl.searchParams.get('page')
+  const pageSize = req.nextUrl.searchParams.get('pageSize')
+
+  const skip = (Number(page) - 1) * Number(pageSize)
+  const posts = await prisma.post.findMany({
+    skip,
+    take: Number(pageSize),
+    include: {
+      author: true,
+      categories: true,
+      tags: true
+    }
+  });
+
+  const totalPosts = await prisma.post.count();
+
+  return Response.json({posts, totalPosts})
+}

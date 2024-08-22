@@ -6,10 +6,12 @@ const prisma = new PrismaClient();
 
 async function main() {
   for (let i = 0; i < 10; i++) {  // Adjust the number of posts you want to generate
+    const fakeTitle = faker.lorem.sentence() 
     await prisma.post.create({
       data: {
-        title: faker.lorem.sentence(), // Generate a random title
-        content: faker.lorem.paragraphs(3), // Generate random content with 3 paragraphs
+        title: fakeTitle, // Generate a random title
+        slug: fakeTitle.toLowerCase().replace(/\s+/g, "-"),
+        content: faker.lorem.paragraphs({min: 4, max: 8}), // Generate random content with 3 paragraphs
         authorId: 1, // Set the authorId to 1
         categories: {
           connect: {

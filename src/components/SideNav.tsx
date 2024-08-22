@@ -32,7 +32,7 @@ function SideNavLink({
 
 export default function SideNav() {
   return (
-    <nav className="flex flex-col border border-gray-700 rounded-lg h-fit">
+    <nav className="flex flex-col border border-gray-700 rounded-lg h-fit mx-2">
       <SideNavLink href="/admin/dashboard">Dashboard</SideNavLink>
       <SideNavLink href="/admin/posts">Posts</SideNavLink>
     </nav>
