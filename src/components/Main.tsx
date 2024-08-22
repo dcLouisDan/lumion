@@ -1,14 +1,17 @@
 "use client";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { blueGrey } from "@mui/material/colors";
+import { blueGrey, grey } from "@mui/material/colors";
 import React, { ReactNode } from "react";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#be123c",
+      main: grey[900],
     },
     secondary: blueGrey,
+  },
+  typography: {
+    fontFamily: ['"Shantell Sans"'].join(","),
   },
   components: {
     MuiButton: {
@@ -25,7 +28,7 @@ const theme = createTheme({
 export default function Main({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider theme={theme}>
-      <main className="flex-1 flex flex-col">{children}</main>
+      <div className="flex-1 flex flex-col">{children}</div>
     </ThemeProvider>
   );
 }

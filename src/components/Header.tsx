@@ -1,14 +1,12 @@
 "use client";
 
+import { brandFont } from "@/lib/theme";
 import { Button } from "@mui/material";
 import type { User } from "next-auth";
 import { signOut } from "next-auth/react";
-import { Anton } from "next/font/google";
 import Link from "next/link";
-import { redirect, usePathname } from "next/navigation";
-import React from "react";
-
-const anton = Anton({ subsets: ["latin"], weight: ["400"] });
+import { usePathname } from "next/navigation";
+import React, { ReactNode } from "react";
 
 const authButtonGroup = (
   <div className="flex gap-2 py-1">
@@ -25,6 +23,25 @@ const authButtonGroup = (
   </div>
 );
 
+function NavLink({
+  href,
+  children,
+  ...rest
+}: {
+  href: string;
+  children: ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="py-2 hover:border-b-2 px-2 transition-all ease-in-out duration-75 border-black text-sm sm:text-base"
+      {...rest}
+    >
+      {children}
+    </Link>
+  );
+}
+
 export default function Header({
   authUser = null,
 }: {
@@ -34,42 +51,49 @@ export default function Header({
   const authPaths = ["/auth/login", "/auth/signup"];
   if (!authUser) {
     return (
-      <header className="flex py-4 px-4 sm:px-2 items-center">
-        <div className="flex-1">
+      <header className="flex flex-col sm:flex-row py-6 px-4 sm:px-2 items-center">
+        <div className="flex-1 mb-2 sm:mb-0">
           <Link href="/">
             <Button
               fullWidth={false}
               className={
-                anton.className + " text-2xl sm:text-4xl text-rose-700 "
+                brandFont.className + " text-2xl sm:text-3xl text-gray-900 "
               }
             >
-              Lumion
+              Introverted Ink
             </Button>
           </Link>
         </div>
-        {authPaths.includes(pathname) ? "" : authButtonGroup}
+        <nav className="flex items-center justify-around gap-3">
+          <NavLink href="/blogs">blogs</NavLink>
+          <NavLink href="/sketchbook">sketchbook</NavLink>
+          <NavLink href="/about">about</NavLink>
+        </nav>
       </header>
     );
   } else {
     return (
-      <header className="flex py-4 px-4 sm:px-2 items-center">
+      <header className="flex py-8 px-4 sm:px-2 items-center">
         <div className="flex-1">
           <Link href="/">
             <Button
               fullWidth={false}
               className={
-                anton.className + " text-2xl sm:text-4xl text-rose-700 "
+                brandFont.className + " text-2xl sm:text-3xl text-gray-900 "
               }
             >
-              Lumion
+              Introverted Ink
             </Button>
           </Link>
         </div>
-        <div className="flex items-center gap-2">
-          <div>Welcome {authUser.name}</div>
+        <div className="flex items-center gap-8">
+          <div>
+            Welcome <span className="font-bold">{authUser.name}</span>
+          </div>
           <Link href="#">
             <Button
-              variant="contained"
+              size="small"
+              variant="outlined"
               disableElevation
               onClick={() => signOut({ callbackUrl: "/auth/login" })}
             >

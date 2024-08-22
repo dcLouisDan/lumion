@@ -2,29 +2,27 @@ import { Metadata } from "next";
 import React from "react";
 import Link from "next/link";
 import LightbulbMomentSVG from "@/components/LightbulbMomentSVG";
-import { Anton } from "next/font/google";
 import LoginForm from "@/components/LoginForm";
 import { getServerSession } from "next-auth";
 import { options } from "../../api/auth/[...nextauth]/options";
 import { redirect } from "next/navigation";
+import { brandFont } from "@/lib/theme";
 
 export const metadata: Metadata = {
-  title: "Lumion - Login",
+  title: "Introverted Ink - Login",
 };
-
-const anton = Anton({ subsets: ["latin"], weight: ["400"] });
 
 export default async function LoginPage() {
   const session = await getServerSession(options);
   if (session) {
-    redirect("/dashboard");
+    redirect("/admin/dashboard");
   }
   return (
     <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 h-full px-1 sm:px-5">
       <div className="hidden sm:block lg:col-span-2 relative">
-        <div className={"mt-20 leading-snug text-5xl " + anton.className}>
+        <div className={"mt-20 leading-10 text-5xl " + brandFont.className}>
           Unlock your <br />{" "}
-          <span className={anton.className + " text-rose-700"}>
+          <span className={brandFont.className + " text-rose-700"}>
             {" "}
             Personalized Experience.
           </span>
@@ -37,7 +35,7 @@ export default async function LoginPage() {
         <div
           className={
             "text-center mb-20 text-5xl font-bold text-rose-700 " +
-            anton.className
+            brandFont.className
           }
         >
           Welcome back.

@@ -1,3 +1,15 @@
-export { default } from "next-auth/middleware"
+import withAuth from "next-auth/middleware"
+import { Roles } from "./lib/utils"
 
-export const config = { matcher: ["/dashboard"] }
+export default withAuth(
+  function middleware(req) {
+    console.log(req.nextauth.token)
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => token?.role === Roles.ADMIN,
+    },
+  },
+)
+
+export const config = { matcher: ["/admin/:path*"] }
