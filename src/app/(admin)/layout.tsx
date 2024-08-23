@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Shantell_Sans } from "next/font/google";
 import Header from "@/components/Header";
 import Main from "@/components/Main";
-import "./globals.css";
-import AuthProvider from "./context/AuthProvider";
+import "../globals.css";
+import AuthProvider from "../context/AuthProvider";
 import { getServerSession } from "next-auth";
-import { options } from "./api/auth/[...nextauth]/options";
+import { options } from "../api/auth/[...nextauth]/options";
 import "@fontsource/shantell-sans";
 import "@fontsource/shantell-sans/400.css";
 import "@fontsource/shantell-sans/500.css";
@@ -55,11 +55,10 @@ export default async function RootLayout({
         <AuthProvider>
           <Main>
             <Header authUser={authUser} />
-            {!session ? (
-              <UnauthorizedLayout children={children} />
-            ) : (
-              <AuthorizedLayout children={children} />
-            )}
+            <div className="flex-1 grid grid-cols-5">
+              <SideNav />
+              <main className="col-span-4 px-5">{children}</main>
+            </div>
             <Footer />
           </Main>
         </AuthProvider>
