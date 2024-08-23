@@ -5,6 +5,8 @@ import { error } from "console";
 import React, { SyntheticEvent, useState } from "react";
 import CheckboxesTags from "./CheckBoxesTags";
 import { User } from "next-auth";
+import Tiptap from "./Tiptap";
+import parse from "html-react-parser";
 
 export default function AddPostForm({
   user,
@@ -15,6 +17,7 @@ export default function AddPostForm({
   categories: Category[];
   tags: Tag[];
 }) {
+  const [content, setContent] = useState("");
   const [fields, setFields] = useState<Prisma.PostCreateInput>({
     title: "",
     slug: "",
@@ -45,7 +48,6 @@ export default function AddPostForm({
       return updatedFields;
     });
   }
-
   function validateField(name: string, value: string) {
     let error = "";
 
@@ -89,6 +91,7 @@ export default function AddPostForm({
         error={!!errors.title}
         helperText={errors.title}
         fullWidth
+        onChange={handleFormInputChange}
       />
       {/* Categories options */}
       <CheckboxesTags
@@ -106,23 +109,21 @@ export default function AddPostForm({
         placeholder="Choose tags"
         label="Tags"
       />
-      <TextField
-        variant="outlined"
-        size="small"
-        name="content"
-        error={!!errors.content}
-        helperText={errors.content}
-        label="Content"
-        fullWidth
-        multiline
-        minRows={10}
-      />
-
+      <div>
+        <h2 className="mb-2">Content</h2>
+        <Tiptap setContent={setContent} />
+      </div>
       <div className="flex justify-end">
-        <Button variant="contained" disableElevation type="submit">
+        <Button
+          variant="contained"
+          disableElevation
+          type="button"
+          onClick={() => console.log(content)}
+        >
           Save Post
         </Button>
       </div>
+      <div>{parse(content)}</div>
     </form>
   );
 }
