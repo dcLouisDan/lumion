@@ -1,4 +1,4 @@
-import CustomTable from "@/components/CustomTable";
+import PostsTable from "@/components/PostsTable";
 import { brandFont } from "@/lib/theme";
 import React from "react";
 
@@ -7,7 +7,7 @@ export default async function PostsPage() {
     <div>
       <h1 className={brandFont.className + " text-3xl mb-5"}>Manage Posts</h1>
       <div>
-        <CustomTable />
+        <PostsTable />
       </div>
     </div>
   );

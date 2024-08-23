@@ -23,19 +23,6 @@ export const metadata: Metadata = {
   description: "Illuminate your thoughts",
 };
 
-function UnauthorizedLayout({ children }: { children: ReactNode }) {
-  return <div className="flex-1">{children}</div>;
-}
-
-function AuthorizedLayout({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex-1 grid grid-cols-5">
-      <SideNav />
-      <main className="col-span-4 px-5">{children}</main>
-    </div>
-  );
-}
-
 export default async function RootLayout({
   children,
 }: Readonly<{
