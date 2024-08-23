@@ -1,5 +1,6 @@
 "use client";
 import {
+  IconButton,
   Paper,
   SortDirection,
   Table,
@@ -16,6 +17,8 @@ import { error } from "console";
 import type { Post, Prisma } from "prisma/prisma-client";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { EditSharp } from "@mui/icons-material";
+import Link from "next/link";
 
 const utc = require("dayjs/plugin/utc");
 const timezone = require("dayjs/plugin/timezone");
@@ -102,6 +105,17 @@ export default function PostsTable() {
                   </TableCell>
                   <TableCell>
                     {post.published ? "Published" : "Pending"}
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/posts/${post.id}`}>
+                      <IconButton
+                        color="primary"
+                        size="small"
+                        aria-label="edit post"
+                      >
+                        <EditSharp fontSize="inherit" />
+                      </IconButton>
+                    </Link>
                   </TableCell>
                 </TableRow>
               );
