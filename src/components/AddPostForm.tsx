@@ -1,12 +1,11 @@
 "use client";
-import { Button, TextField } from "@mui/material";
+import { Button, Snackbar, TextField } from "@mui/material";
 import { Category, Prisma, Tag } from "@prisma/client";
-import { error } from "console";
-import React, { SyntheticEvent, useState } from "react";
+import React, { FormEvent, SyntheticEvent, useState } from "react";
 import CheckboxesTags from "./CheckBoxesTags";
 import { User } from "next-auth";
 import Tiptap from "./Tiptap";
-import parse from "html-react-parser";
+import { addNewPost } from "@/actions/post-actions";
 
 export default function AddPostForm({
   user,
@@ -17,6 +16,8 @@ export default function AddPostForm({
   categories: Category[];
   tags: Tag[];
 }) {
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
   const [content, setContent] = useState("");
   const [fields, setFields] = useState<Prisma.PostCreateInput>({
     title: "",
@@ -72,9 +73,49 @@ export default function AddPostForm({
   ) {
     setChosenTags(newValue);
   }
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    const res = await addNewPost({
+      ...fields,
+      slug: fields.title.toLowerCase().replace(/\s+/g, "-"),
+      content: content,
+      categories: {
+        connect: chosenCategories,
+      },
+      tags: {
+        connect: chosenTags,
+      },
+    });
+
+    if (res.success) {
+      setSnackMessage("New post added successfully.");
+      setSnackOpen(true);
+    } else {
+      setSnackMessage(res?.error as string);
+      setSnackOpen(true);
+    }
+  }
+
+  const handleClose = (event: any, reason: any) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnackOpen(false);
+  };
+
   return (
-    <form className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={5000}
+        onClose={handleClose}
+        message={snackMessage}
+      />
       <TextField
+        id="author"
         variant="outlined"
         label="Author"
         size="small"
@@ -85,6 +126,7 @@ export default function AddPostForm({
       />
       <TextField
         variant="outlined"
+        id="title"
         size="small"
         label="Title"
         name="title"
@@ -103,7 +145,7 @@ export default function AddPostForm({
       />
       {/* Tags options */}
       <CheckboxesTags
-        value={chosenCategories}
+        value={chosenTags}
         onChange={handleTagsChange}
         options={tags}
         placeholder="Choose tags"
@@ -114,16 +156,10 @@ export default function AddPostForm({
         <Tiptap setContent={setContent} />
       </div>
       <div className="flex justify-end">
-        <Button
-          variant="contained"
-          disableElevation
-          type="button"
-          onClick={() => console.log(content)}
-        >
+        <Button variant="contained" disableElevation type="submit">
           Save Post
         </Button>
       </div>
-      <div>{parse(content)}</div>
     </form>
   );
 }

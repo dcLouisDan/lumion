@@ -34,7 +34,7 @@ export default function PostsTable() {
   const [totalPosts, setTotalPosts] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [order, setOrder] = useState<SortDirection>("asc");
+  const [order, setOrder] = useState<SortDirection>("desc");
 
   useEffect(() => {
     async function fetchPosts() {

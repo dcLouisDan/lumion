@@ -35,7 +35,7 @@ export default async function RootLayout({
     <html lang="en">
       <body
         className={
-          "w-full max-w-[1200px] mx-auto flex flex-col h-screen " +
+          "w-full max-w-[1600px] mx-auto flex flex-col h-screen " +
           baseFont.className
         }
       >
