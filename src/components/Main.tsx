@@ -28,7 +28,7 @@ const theme = createTheme({
 export default function Main({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider theme={theme}>
-      <div className="flex-1 flex flex-col">{children}</div>
+      <div className="flex-1 flex flex-col px-2 sm:px-4">{children}</div>
     </ThemeProvider>
   );
 }

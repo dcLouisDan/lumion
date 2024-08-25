@@ -87,7 +87,7 @@ export default function Header({
           </Link>
         </div>
         <div className="flex items-center gap-8">
-          <div>
+          <div className="hidden sm:block">
             Welcome <span className="font-bold">{authUser.name}</span>
           </div>
           <Link href="#">

@@ -42,7 +42,7 @@ export default async function RootLayout({
         <AuthProvider>
           <Main>
             <Header authUser={authUser} />
-            <div className="flex-1 grid grid-cols-5">
+            <div className="flex-1 md:grid md:grid-cols-5">
               <SideNav />
               <main className="col-span-4 px-5">{children}</main>
             </div>

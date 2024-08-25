@@ -10,12 +10,14 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 export default function CheckboxesTags({
   options,
+  id,
   label,
   placeholder = "",
   value,
   onChange,
 }: {
   options: { id: number; name: string }[];
+  id: string;
   label: string;
   placeholder?: string;
   value: { id: number; name: string }[];
@@ -30,7 +32,7 @@ export default function CheckboxesTags({
       onChange={onChange}
       size="small"
       multiple
-      id="checkboxes-tags-demo"
+      id={id}
       options={options}
       disableCloseOnSelect
       getOptionLabel={(option) => option.name}

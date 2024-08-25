@@ -6,6 +6,7 @@ import CheckboxesTags from "./CheckBoxesTags";
 import { User } from "next-auth";
 import Tiptap from "./Tiptap";
 import { addNewPost } from "@/actions/post-actions";
+import parse from "html-react-parser";
 
 export default function AddPostForm({
   user,
@@ -142,6 +143,7 @@ export default function AddPostForm({
         options={categories}
         placeholder="Choose categories"
         label="Categories"
+        id="post-categories"
       />
       {/* Tags options */}
       <CheckboxesTags
@@ -150,6 +152,7 @@ export default function AddPostForm({
         options={tags}
         placeholder="Choose tags"
         label="Tags"
+        id="post-tags"
       />
       <div>
         <h2 className="mb-2">Content</h2>
@@ -159,6 +162,13 @@ export default function AddPostForm({
         <Button variant="contained" disableElevation type="submit">
           Save Post
         </Button>
+      </div>
+      <div>
+        <h2 className="mb-2">Preview:</h2>
+        <div>{content}</div>
+        <div className="border border-gray-300 rounded-sm p-4">
+          {parse(content)}
+        </div>
       </div>
     </form>
   );
