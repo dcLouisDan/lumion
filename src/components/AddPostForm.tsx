@@ -7,6 +7,7 @@ import { User } from "next-auth";
 import Tiptap from "./Tiptap";
 import { addNewPost, updatePost } from "@/actions/post-actions";
 import parse from "html-react-parser";
+import { useRouter } from "next/navigation";
 
 export default function AddPostForm({
   user,
@@ -25,6 +26,7 @@ export default function AddPostForm({
   chosenCategoriesData?: Category[];
   chosenTagsData?: Tag[];
 }) {
+  const router = useRouter();
   const initialFieldState: Prisma.PostCreateInput | Prisma.PostUpdateInput =
     method === "create"
       ? {
@@ -166,6 +168,9 @@ export default function AddPostForm({
       if (res.success) {
         setSnackMessage("Post updated successfully.");
         setSnackOpen(true);
+        setTimeout(() => {
+          router.push(`/posts/${postData?.id}`);
+        }, 1000);
       } else {
         setSnackMessage(res?.error as string);
         setSnackOpen(true);

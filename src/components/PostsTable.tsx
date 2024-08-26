@@ -1,5 +1,7 @@
 "use client";
 import {
+  Box,
+  CircularProgress,
   IconButton,
   Paper,
   SortDirection,
@@ -13,8 +15,7 @@ import {
   TableSortLabel,
 } from "@mui/material";
 import axios from "axios";
-import { error } from "console";
-import type { Post, Prisma } from "prisma/prisma-client";
+import type { Prisma } from "prisma/prisma-client";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { EditSharp } from "@mui/icons-material";
@@ -107,7 +108,7 @@ export default function PostsTable({ user }: { user?: User | null }) {
                   <TableCell>
                     {post.published ? "Published" : "Pending"}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="flex justify-center">
                     <Link
                       href={`/posts/${post.id}`}
                       className={
