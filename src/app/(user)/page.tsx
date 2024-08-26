@@ -5,6 +5,9 @@ export default async function Home() {
     orderBy: {
       createdAt: "desc",
     },
+    where: {
+      published: true,
+    },
     include: {
       author: true,
     },

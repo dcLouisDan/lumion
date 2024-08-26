@@ -132,6 +132,16 @@ export default function AddPostForm({
         setSnackOpen(true);
       }
     } else {
+      const removedCategories = chosenCategoriesData?.filter(
+        (dataCategory) =>
+          !chosenCategories.some(
+            (chosenCategory) => chosenCategory.id === dataCategory.id
+          )
+      );
+      const removedTags = chosenTagsData?.filter(
+        (dataTag) =>
+          !chosenTags.some((chosenTag) => chosenTag.id === dataTag.id)
+      );
       const res = await updatePost(
         {
           title: fields.title as string,
@@ -144,9 +154,11 @@ export default function AddPostForm({
           content: content,
           categories: {
             connect: chosenCategories,
+            disconnect: removedCategories,
           },
           tags: {
             connect: chosenTags,
+            disconnect: removedTags,
           },
         },
         postData?.id
@@ -193,7 +205,7 @@ export default function AddPostForm({
         size="small"
         label="Title"
         name="title"
-        defaultValue={postData?.title ?? ""}
+        value={fields.title}
         error={!!errors.title}
         helperText={errors.title}
         fullWidth
@@ -219,10 +231,7 @@ export default function AddPostForm({
       />
       <div>
         <h2 className="mb-2">Content</h2>
-        <Tiptap
-          defaulContent={postData?.content ?? ""}
-          setContent={setContent}
-        />
+        <Tiptap defaulContent={content ?? ""} setContent={setContent} />
       </div>
       <div className="flex justify-end">
         <Button variant="contained" disableElevation type="submit">
