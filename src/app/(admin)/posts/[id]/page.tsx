@@ -8,6 +8,8 @@ import { getServerSession } from "next-auth";
 import parse from "html-react-parser";
 import Link from "next/link";
 import React from "react";
+import { Delete, Edit, Visibility } from "@mui/icons-material";
+import DeleteButtonWithModal from "@/components/DeleteButtonWithModal";
 
 type PostExtend = Post & {
   categories: Category[];
@@ -51,8 +53,8 @@ export default async function PostPage({
 
   return (
     <div>
-      <section className="flex justify-between">
-        <Breadcrumbs className="mb-5">
+      <section className="flex flex-col gap-2 sm:flex-row sm:justify-between mb-5 sm:mb-0">
+        <Breadcrumbs className="sm:mb-5">
           <Link
             href="/posts"
             color="inherit"
@@ -67,26 +69,31 @@ export default async function PostPage({
             Post No. {id}
           </Typography>
         </Breadcrumbs>
-        {!isEditing ? (
-          <Link
-            href={{
-              pathname: `/posts/${id}`,
-              query: {
-                isEditing: true,
-              },
-            }}
-          >
-            <Button disableElevation variant="contained">
-              Edit Post
-            </Button>
-          </Link>
-        ) : (
-          <Link href={`/posts/${id}`}>
-            <Button disableElevation variant="outlined">
-              View Post
-            </Button>
-          </Link>
-        )}
+        <div className="flex flex-row gap-2">
+          {!isEditing ? (
+            <Link
+              href={{
+                pathname: `/posts/${id}`,
+                query: {
+                  isEditing: true,
+                },
+              }}
+            >
+              <Button disableElevation variant="contained">
+                <Edit fontSize="inherit" />
+                <span className="ms-2">Edit Post</span>
+              </Button>
+            </Link>
+          ) : (
+            <Link href={`/posts/${id}`}>
+              <Button disableElevation variant="outlined">
+                <Visibility fontSize="inherit" />
+                <span className="ms-2">View Post</span>
+              </Button>
+            </Link>
+          )}
+          <DeleteButtonWithModal id={id} />
+        </div>
       </section>
       {!isEditing ? (
         <PostPreview post={post} />

@@ -1,6 +1,6 @@
 "use client";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { blueGrey, grey } from "@mui/material/colors";
+import { blueGrey, grey, red } from "@mui/material/colors";
 import React, { ReactNode } from "react";
 
 const theme = createTheme({
@@ -9,6 +9,9 @@ const theme = createTheme({
       main: grey[900],
     },
     secondary: blueGrey,
+    warning: {
+      main: red[800],
+    },
   },
   typography: {
     fontFamily: ['"Shantell Sans"'].join(","),

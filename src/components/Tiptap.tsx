@@ -170,7 +170,7 @@ const Tiptap = ({
           </div>
         </Box>
       </Modal>
-      <div className="bg-gray-100 border-b px-2 py-1 flex items-center gap-4 justify-center">
+      <div className="bg-gray-100 border-b px-2 py-1 grid grid-cols-2 sm:flex sm:gap-2 gap-2 justify-items-center">
         <ToggleButtonGroup aria-label="text style" size="small">
           <Tooltip title="H1">
             <ToggleButton

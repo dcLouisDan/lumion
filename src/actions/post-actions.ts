@@ -78,3 +78,23 @@ export async function updatePost(post: Prisma.PostUpdateInput, postId: number | 
     return {success : false, error: (error as Error).message}
   }
 }
+
+export async function deletePost(id:number) {
+  try {
+    if(!id) {
+      throw new Error("Post ID required")
+    }
+    
+    await prisma.post.delete({
+      where: {
+        id: Number(id)
+      }
+    }).catch((error) => {
+      throw new Error(error as string)
+    })
+    
+    return {success: true}
+  } catch (error) {
+    return {success: false, error: (error as Error).message}
+  }
+}
