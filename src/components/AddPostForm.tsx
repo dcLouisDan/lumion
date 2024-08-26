@@ -1,43 +1,67 @@
 "use client";
 import { Button, Snackbar, TextField } from "@mui/material";
-import { Category, Prisma, Tag } from "@prisma/client";
+import { Category, Post, Prisma, Tag } from "@prisma/client";
 import React, { FormEvent, SyntheticEvent, useState } from "react";
 import CheckboxesTags from "./CheckBoxesTags";
 import { User } from "next-auth";
 import Tiptap from "./Tiptap";
-import { addNewPost } from "@/actions/post-actions";
+import { addNewPost, updatePost } from "@/actions/post-actions";
 import parse from "html-react-parser";
 
 export default function AddPostForm({
   user,
   categories,
   tags,
+  method = "create",
+  postData,
+  chosenCategoriesData,
+  chosenTagsData,
 }: {
   user: User | undefined;
   categories: Category[];
   tags: Tag[];
+  method?: "create" | "update";
+  postData?: Post | null;
+  chosenCategoriesData?: Category[];
+  chosenTagsData?: Tag[];
 }) {
+  const initialFieldState: Prisma.PostCreateInput | Prisma.PostUpdateInput =
+    method === "create"
+      ? {
+          title: "",
+          slug: "",
+          content: "",
+          author: {
+            connect: {
+              id: user?.id ? Number(user?.id) : 1,
+            },
+          },
+        }
+      : {
+          title: postData?.title,
+          slug: postData?.slug,
+          content: postData?.content,
+          author: {
+            connect: {
+              id: user?.id ? Number(user?.id) : postData?.authorId,
+            },
+          },
+        };
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState("");
-  const [content, setContent] = useState("");
-  const [fields, setFields] = useState<Prisma.PostCreateInput>({
-    title: "",
-    slug: "",
-    content: "",
-    author: {
-      connect: {
-        id: user?.id ? Number(user?.id) : 1,
-      },
-    },
-  });
-  const [chosenCategories, setChosenCategories] = useState<Category[]>([]);
-  const [chosenTags, setChosenTags] = useState<Tag[]>([]);
+  const [content, setContent] = useState(postData?.content ?? "");
+  const [fields, setFields] = useState<
+    Prisma.PostCreateInput | Prisma.PostUpdateInput
+  >(initialFieldState);
+  const [chosenCategories, setChosenCategories] = useState<Category[]>(
+    chosenCategoriesData ?? []
+  );
+  const [chosenTags, setChosenTags] = useState<Tag[]>(chosenTagsData ?? []);
 
   const [errors, setErrors] = useState({
     title: "",
     content: "",
   });
-  const [formErrors, setFormError] = useState<string | null>(null);
 
   function handleFormInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFields((prevState) => {
@@ -78,24 +102,62 @@ export default function AddPostForm({
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
-    const res = await addNewPost({
-      ...fields,
-      slug: fields.title.toLowerCase().replace(/\s+/g, "-"),
-      content: content,
-      categories: {
-        connect: chosenCategories,
-      },
-      tags: {
-        connect: chosenTags,
-      },
-    });
-
-    if (res.success) {
-      setSnackMessage("New post added successfully.");
+    if (!fields.title) {
+      setSnackMessage("Please add post title.");
       setSnackOpen(true);
+      return;
+    }
+    if (method === "create") {
+      const res = await addNewPost({
+        title: fields.title as string,
+        author: {
+          connect: {
+            id: user?.id ? Number(user?.id) : 1,
+          },
+        },
+        slug: fields.title.toString().toLowerCase().replace(/\s+/g, "-"),
+        content: content,
+        categories: {
+          connect: chosenCategories,
+        },
+        tags: {
+          connect: chosenTags,
+        },
+      });
+      if (res.success) {
+        setSnackMessage("New post added successfully.");
+        setSnackOpen(true);
+      } else {
+        setSnackMessage(res?.error as string);
+        setSnackOpen(true);
+      }
     } else {
-      setSnackMessage(res?.error as string);
-      setSnackOpen(true);
+      const res = await updatePost(
+        {
+          title: fields.title as string,
+          author: {
+            connect: {
+              id: user?.id ? Number(user?.id) : 1,
+            },
+          },
+          slug: fields.title.toString().toLowerCase().replace(/\s+/g, "-"),
+          content: content,
+          categories: {
+            connect: chosenCategories,
+          },
+          tags: {
+            connect: chosenTags,
+          },
+        },
+        postData?.id
+      );
+      if (res.success) {
+        setSnackMessage("Post updated successfully.");
+        setSnackOpen(true);
+      } else {
+        setSnackMessage(res?.error as string);
+        setSnackOpen(true);
+      }
     }
   }
 
@@ -131,6 +193,7 @@ export default function AddPostForm({
         size="small"
         label="Title"
         name="title"
+        defaultValue={postData?.title ?? ""}
         error={!!errors.title}
         helperText={errors.title}
         fullWidth
@@ -156,7 +219,10 @@ export default function AddPostForm({
       />
       <div>
         <h2 className="mb-2">Content</h2>
-        <Tiptap setContent={setContent} />
+        <Tiptap
+          defaulContent={postData?.content ?? ""}
+          setContent={setContent}
+        />
       </div>
       <div className="flex justify-end">
         <Button variant="contained" disableElevation type="submit">
@@ -165,7 +231,7 @@ export default function AddPostForm({
       </div>
       <div>
         <h2 className="mb-2">Preview:</h2>
-        <div>{content}</div>
+        {/* <div>{content}</div> */}
         <div className="border border-gray-300 rounded-sm p-4">
           {parse(content)}
         </div>

@@ -2,7 +2,9 @@
 
 import { registerUser } from "@/actions/user-actions";
 import { Lock, Mail, Person } from "@mui/icons-material";
-import { Button, InputAdornment, TextField } from "@mui/material";
+import { Button, InputAdornment, Snackbar, TextField } from "@mui/material";
+import { signIn } from "next-auth/react";
+import { redirect } from "next/navigation";
 import React, { FormEvent, useEffect, useState } from "react";
 
 type UserSignupForm = {
@@ -13,6 +15,8 @@ type UserSignupForm = {
 };
 
 export default function SignUpForm() {
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
   const [fields, setFields] = useState<UserSignupForm>({
     name: "",
     email: "",
@@ -25,7 +29,6 @@ export default function SignUpForm() {
     password: "",
     passwordRepeat: "",
   });
-  const [formErrors, setFormError] = useState<string | null>(null);
   const isFormIncomplete = Object.values(fields).some(
     (value) => value.trim() === ""
   );
@@ -33,6 +36,14 @@ export default function SignUpForm() {
   const hasErrors = Object.values(errors).some((value) => value.trim() !== "");
 
   const isSubmitDisabled = isFormIncomplete || hasErrors;
+
+  const handleClose = (event: any, reason: any) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnackOpen(false);
+  };
 
   function handleFormInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFields((prevState) => {
@@ -73,21 +84,40 @@ export default function SignUpForm() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setFormError(null);
 
     const response = await registerUser(fields);
 
     if (!response.success) {
-      // setFormError(response.error);
+      setSnackMessage(response?.error as string);
+      setSnackOpen(true);
       console.log(response.error);
       return;
     }
 
     console.log("Success");
+    setSnackMessage("Account created successfully.");
+    setSnackOpen(true);
+    const res = await signIn("credentials", {
+      email: fields.email,
+      password: fields.password,
+    });
+
+    if (res?.error) {
+      setSnackMessage(res?.error as string);
+      setSnackOpen(true);
+      console.log(res.error);
+      return;
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={5000}
+        onClose={handleClose}
+        message={snackMessage}
+      />
       <TextField
         fullWidth
         variant="outlined"

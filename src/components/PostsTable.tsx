@@ -19,6 +19,7 @@ import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { EditSharp } from "@mui/icons-material";
 import Link from "next/link";
+import { User } from "next-auth";
 
 const utc = require("dayjs/plugin/utc");
 const timezone = require("dayjs/plugin/timezone");
@@ -29,7 +30,7 @@ type PostsWithIncludes = Prisma.PostGetPayload<{
   include: { author: true; categories: true; tags: true };
 }>;
 
-export default function PostsTable() {
+export default function PostsTable({ user }: { user?: User | null }) {
   const [posts, setPosts] = useState<PostsWithIncludes[]>([]);
   const [totalPosts, setTotalPosts] = useState(0);
   const [page, setPage] = useState(0);
@@ -107,11 +108,19 @@ export default function PostsTable() {
                     {post.published ? "Published" : "Pending"}
                   </TableCell>
                   <TableCell>
-                    <Link href={`/posts/${post.id}`}>
+                    <Link
+                      href={`/posts/${post.id}`}
+                      className={
+                        Number(user?.id) !== post.authorId
+                          ? "pointer-events-none"
+                          : "pointer-events-auto"
+                      }
+                    >
                       <IconButton
                         color="primary"
                         size="small"
                         aria-label="edit post"
+                        disabled={Number(user?.id) !== post.authorId}
                       >
                         <EditSharp fontSize="inherit" />
                       </IconButton>

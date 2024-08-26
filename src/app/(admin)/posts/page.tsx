@@ -1,10 +1,14 @@
+import { options } from "@/app/api/auth/[...nextauth]/options";
 import PostsTable from "@/components/PostsTable";
 import { brandFont } from "@/lib/theme";
 import { Button } from "@mui/material";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 import React from "react";
 
 export default async function PostsPage() {
+  const session = await getServerSession(options);
+  const authUser = session?.user;
   return (
     <div>
       <div className="flex">
@@ -20,7 +24,7 @@ export default async function PostsPage() {
         </div>
       </div>
       <div>
-        <PostsTable />
+        <PostsTable user={authUser} />
       </div>
     </div>
   );

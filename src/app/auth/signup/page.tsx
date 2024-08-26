@@ -9,7 +9,7 @@ import { options } from "@/app/api/auth/[...nextauth]/options";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Lumion - Login",
+  title: "Lumion - Create Account",
 };
 
 const anton = Anton({ subsets: ["latin"], weight: ["400"] });

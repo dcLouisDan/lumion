@@ -14,7 +14,6 @@ export async function addNewPost(post: Prisma.PostCreateInput) {
 
     const existingPost = await prisma.post.findUnique({
       where: {
-        title: post.title,
         slug: post.slug
       },
       select:{
@@ -25,10 +24,51 @@ export async function addNewPost(post: Prisma.PostCreateInput) {
     })
 
     if(existingPost !== null) {
-      throw new Error("Post title already exists.")
+      throw new Error("Post title is already used.")
     }
 
     await prisma.post.create({
+      data: post
+    }).catch((error) => {
+      throw new Error(error)
+    })
+    return {success: true}
+  } catch (error) {
+    return {success : false, error: (error as Error).message}
+  }
+}
+
+export async function updatePost(post: Prisma.PostUpdateInput, postId: number | undefined) {
+  try {
+    if (!postId){
+      throw new Error("Post ID should not be undefined.")
+    }
+    if(!post.title?.toString().trim() || !post.title){
+      throw new Error("Post title should not be empty.")
+    }
+    if(!post.content?.toString().trim()){
+      throw new Error("Post content should not be empty.")
+    }
+
+    const existingPost = await prisma.post.findUnique({
+      where: {
+        slug: post.slug?.toString()
+      },
+      select:{
+        id: true,
+        title: true,
+        slug: true
+      }
+    })
+
+    if(existingPost !== null && existingPost.id !== postId) {
+      throw new Error("Post title is already used.")
+    }
+
+    await prisma.post.update({
+      where: {
+        id: postId
+      },
       data: post
     }).catch((error) => {
       throw new Error(error)

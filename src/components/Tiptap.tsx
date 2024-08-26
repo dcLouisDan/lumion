@@ -38,8 +38,10 @@ import StarterKit from "@tiptap/starter-kit";
 import React, { FormEvent, useState } from "react";
 
 const Tiptap = ({
+  defaulContent,
   setContent,
 }: {
+  defaulContent?: string;
   setContent: (value: React.SetStateAction<string>) => void;
 }) => {
   const [alignment, setAlignment] = React.useState("left");
@@ -102,7 +104,7 @@ const Tiptap = ({
       }).configure({ levels: [1, 2] }),
     ],
     immediatelyRender: false,
-    content: "",
+    content: defaulContent,
     editorProps: {
       attributes: {
         class:
