@@ -32,6 +32,7 @@ type PostsWithIncludes = Prisma.PostGetPayload<{
 }>;
 
 export default function PostsTable({ user }: { user?: User | null }) {
+  const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState<PostsWithIncludes[]>([]);
   const [totalPosts, setTotalPosts] = useState(0);
   const [page, setPage] = useState(0);
@@ -49,6 +50,7 @@ export default function PostsTable({ user }: { user?: User | null }) {
         .then((res) => {
           setPosts(res.data.posts);
           setTotalPosts(res.data.totalPosts);
+          setIsLoading(false);
         })
         .catch((error) => {
           console.error(error);
@@ -96,6 +98,16 @@ export default function PostsTable({ user }: { user?: User | null }) {
             </TableRow>
           </TableHead>
           <TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={6}>
+                  <div className="flex justify-center items-center gap-8">
+                    Loading Data...
+                    <CircularProgress />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : null}
             {posts.map((post) => {
               return (
                 <TableRow key={post.id}>
