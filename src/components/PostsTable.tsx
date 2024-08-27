@@ -16,6 +16,7 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import axios from "axios";
@@ -222,46 +223,54 @@ export default function PostsTable({ user }: { user?: User | null }) {
                   </TableCell>
                   <TableCell>
                     <div className="flex justify-center gap-2">
-                      <Link
-                        href={`/posts/${post.id}`}
-                        className={
-                          Number(user?.id) !== post.authorId
-                            ? "pointer-events-none"
-                            : "pointer-events-auto"
+                      <Tooltip title="Edit Post">
+                        <Link
+                          href={`/posts/${post.id}`}
+                          className={
+                            Number(user?.id) !== post.authorId
+                              ? "pointer-events-none"
+                              : "pointer-events-auto"
+                          }
+                        >
+                          <IconButton
+                            color="primary"
+                            size="small"
+                            aria-label="edit post"
+                            disabled={Number(user?.id) !== post.authorId}
+                          >
+                            <EditSharp fontSize="inherit" />
+                          </IconButton>
+                        </Link>
+                      </Tooltip>
+                      <Tooltip
+                        title={
+                          !post.published ? "Publish Post" : "Unpublish Post"
                         }
                       >
                         <IconButton
                           color="primary"
                           size="small"
-                          aria-label="edit post"
+                          aria-label="publish post"
                           disabled={Number(user?.id) !== post.authorId}
+                          onClick={() => {
+                            // handlePublishActionClick(post.id, !post.published)
+                            setTargetPost(post);
+                            setOpenModal(true);
+                          }}
                         >
-                          <EditSharp fontSize="inherit" />
+                          {post.published ? (
+                            <StopCircle
+                              fontSize="inherit"
+                              className="hover:text-red-700 transition-all ease-in-out duration-300"
+                            />
+                          ) : (
+                            <Upload
+                              fontSize="inherit"
+                              className="hover:text-green-700 transition-all ease-in-out duration-300"
+                            />
+                          )}
                         </IconButton>
-                      </Link>
-                      <IconButton
-                        color="primary"
-                        size="small"
-                        aria-label="edit post"
-                        disabled={Number(user?.id) !== post.authorId}
-                        onClick={() => {
-                          // handlePublishActionClick(post.id, !post.published)
-                          setTargetPost(post);
-                          setOpenModal(true);
-                        }}
-                      >
-                        {post.published ? (
-                          <StopCircle
-                            fontSize="inherit"
-                            className="hover:text-red-700 transition-all ease-in-out duration-300"
-                          />
-                        ) : (
-                          <Upload
-                            fontSize="inherit"
-                            className="hover:text-green-700 transition-all ease-in-out duration-300"
-                          />
-                        )}
-                      </IconButton>
+                      </Tooltip>
                     </div>
                   </TableCell>
                 </TableRow>
