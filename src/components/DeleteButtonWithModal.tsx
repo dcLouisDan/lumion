@@ -13,7 +13,7 @@ import React, { useState } from "react";
 
 type ModalContent = "warning" | "loading" | "success" | "error";
 
-export default async function DeleteButtonWithModal({ id }: { id: number }) {
+export default function DeleteButtonWithModal({ id }: { id: number }) {
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState("");

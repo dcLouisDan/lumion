@@ -1,9 +1,12 @@
 "use client";
 import {
   Box,
+  Button,
   CircularProgress,
   IconButton,
+  Modal,
   Paper,
+  Snackbar,
   SortDirection,
   Table,
   TableBody,
@@ -13,14 +16,16 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
-import type { Prisma } from "prisma/prisma-client";
+import type { Post, Prisma } from "prisma/prisma-client";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { EditSharp } from "@mui/icons-material";
+import { EditSharp, StopCircle, Upcoming, Upload } from "@mui/icons-material";
 import Link from "next/link";
 import { User } from "next-auth";
+import { updatePostPublishedState } from "@/actions/post-actions";
 
 const utc = require("dayjs/plugin/utc");
 const timezone = require("dayjs/plugin/timezone");
@@ -32,12 +37,16 @@ type PostsWithIncludes = Prisma.PostGetPayload<{
 }>;
 
 export default function PostsTable({ user }: { user?: User | null }) {
+  const [openModal, setOpenModal] = useState(false);
+  const [targetPost, setTargetPost] = useState<Post | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState<PostsWithIncludes[]>([]);
   const [totalPosts, setTotalPosts] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [order, setOrder] = useState<SortDirection>("desc");
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
 
   useEffect(() => {
     async function fetchPosts() {
@@ -75,8 +84,95 @@ export default function PostsTable({ user }: { user?: User | null }) {
     setPage(0);
   };
 
+  async function handlePublishActionClick(id: number, publishedState: boolean) {
+    try {
+      const res = await updatePostPublishedState(id, publishedState);
+
+      if (!res?.success) {
+        setSnackMessage(res?.error as string);
+      } else {
+        const snackMessage = publishedState
+          ? `Post No. ${id} has been published.`
+          : `Post No. ${id} has been unpublished.`;
+        setSnackMessage(snackMessage);
+
+        setPosts((prevData) =>
+          prevData.map((post) =>
+            post.id === id ? { ...post, published: publishedState } : post
+          )
+        );
+        setOpenModal(false);
+      }
+    } catch (error) {
+      setSnackMessage("Failed to update the post status.");
+    } finally {
+      setSnackOpen(true);
+    }
+  }
+
+  function handleClose() {
+    setSnackOpen(false);
+  }
+
+  function handleModalClose() {
+    setOpenModal(false);
+  }
   return (
     <Paper elevation={1} variant="outlined">
+      <Modal
+        open={openModal}
+        onClose={handleModalClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            bgcolor: "background.paper",
+          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 rounded-lg max-w-96"
+        >
+          <Typography id="modal-modal-title" variant="h6">
+            {targetPost?.published ? "Unpublish" : "Publish"}{" "}
+            <span className="font-bold">"{targetPost?.title}"</span> ???
+          </Typography>
+          <p className="py-4">
+            {targetPost?.published
+              ? "Are you sure you want to unpublish this post? Once unpublished, it will no longer be visible to everyone on the website."
+              : "Are you sure you want to publish this post? Once published, it will be visible to everyone on the website."}
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button
+              onClick={handleModalClose}
+              variant="outlined"
+              color="secondary"
+              disableElevation
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              disableElevation
+              onClick={() => {
+                if (!targetPost?.id) return;
+
+                handlePublishActionClick(
+                  targetPost?.id,
+                  !targetPost?.published
+                );
+              }}
+            >
+              {!targetPost?.published ? "Publish Post" : "Unpublish Post"}
+            </Button>
+          </div>
+        </Box>
+      </Modal>
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={5000}
+        onClose={handleClose}
+        message={snackMessage}
+      />
       <TableContainer>
         <Table className="min-w-[500px] mb-2">
           <TableHead>
@@ -98,7 +194,7 @@ export default function PostsTable({ user }: { user?: User | null }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {isLoading ? (
+            {isLoading && (
               <TableRow>
                 <TableCell colSpan={6}>
                   <div className="flex justify-center items-center gap-8">
@@ -107,7 +203,7 @@ export default function PostsTable({ user }: { user?: User | null }) {
                   </div>
                 </TableCell>
               </TableRow>
-            ) : null}
+            )}
             {posts.map((post) => {
               return (
                 <TableRow key={post.id}>
@@ -118,26 +214,55 @@ export default function PostsTable({ user }: { user?: User | null }) {
                     {dayjs(post.createdAt).format("MMM D, YYYY").toString()}
                   </TableCell>
                   <TableCell>
-                    {post.published ? "Published" : "Pending"}
+                    {post.published ? (
+                      <span className="text-green-700">Published</span>
+                    ) : (
+                      "Pending"
+                    )}
                   </TableCell>
-                  <TableCell className="flex justify-center">
-                    <Link
-                      href={`/posts/${post.id}`}
-                      className={
-                        Number(user?.id) !== post.authorId
-                          ? "pointer-events-none"
-                          : "pointer-events-auto"
-                      }
-                    >
+                  <TableCell>
+                    <div className="flex justify-center gap-2">
+                      <Link
+                        href={`/posts/${post.id}`}
+                        className={
+                          Number(user?.id) !== post.authorId
+                            ? "pointer-events-none"
+                            : "pointer-events-auto"
+                        }
+                      >
+                        <IconButton
+                          color="primary"
+                          size="small"
+                          aria-label="edit post"
+                          disabled={Number(user?.id) !== post.authorId}
+                        >
+                          <EditSharp fontSize="inherit" />
+                        </IconButton>
+                      </Link>
                       <IconButton
                         color="primary"
                         size="small"
                         aria-label="edit post"
                         disabled={Number(user?.id) !== post.authorId}
+                        onClick={() => {
+                          // handlePublishActionClick(post.id, !post.published)
+                          setTargetPost(post);
+                          setOpenModal(true);
+                        }}
                       >
-                        <EditSharp fontSize="inherit" />
+                        {post.published ? (
+                          <StopCircle
+                            fontSize="inherit"
+                            className="hover:text-red-700 transition-all ease-in-out duration-300"
+                          />
+                        ) : (
+                          <Upload
+                            fontSize="inherit"
+                            className="hover:text-green-700 transition-all ease-in-out duration-300"
+                          />
+                        )}
                       </IconButton>
-                    </Link>
+                    </div>
                   </TableCell>
                 </TableRow>
               );
