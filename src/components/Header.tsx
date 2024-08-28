@@ -87,6 +87,12 @@ export default function Header({
           </Link>
         </div>
         <div className="flex items-center gap-8">
+          <nav className="sm:flex items-center justify-around gap-3 hidden">
+            <NavLink href="/blogs">blogs</NavLink>
+            <NavLink href="/sketchbook">sketchbook</NavLink>
+            <NavLink href="/about">about</NavLink>
+            <NavLink href="/dashboard">admin</NavLink>
+          </nav>
           <div className="hidden sm:block">
             Welcome <span className="font-bold">{authUser.name}</span>
           </div>

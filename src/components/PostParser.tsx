@@ -1,6 +1,6 @@
 import { Chip, Divider, Typography } from "@mui/material";
-import { Category, Post, Tag, User } from "@prisma/client";
 import parse from "html-react-parser";
+import { PostExtend } from "@/lib/types/modelTypesExtended";
 
 import dayjs from "dayjs";
 const utc = require("dayjs/plugin/utc");
@@ -8,11 +8,6 @@ const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-type PostExtend = Post & {
-  categories: Category[];
-  tags: Tag[];
-  author: User;
-};
 export default function PostPreview({ post }: { post: PostExtend | null }) {
   return (
     <div className="flex flex-col gap-4">
