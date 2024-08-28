@@ -3,19 +3,13 @@ import AddPostForm from "@/components/AddPostForm";
 import prisma from "@/lib/db";
 import { brandFont } from "@/lib/theme";
 import { Breadcrumbs, Button, Typography } from "@mui/material";
-import { Category, Post, Tag, User } from "@prisma/client";
 import { getServerSession } from "next-auth";
-import parse from "html-react-parser";
 import Link from "next/link";
 import React from "react";
-import { Delete, Edit, Visibility } from "@mui/icons-material";
+import { Edit, Visibility } from "@mui/icons-material";
 import DeleteButtonWithModal from "@/components/DeleteButtonWithModal";
+import PostParser from "@/components/PostParser";
 
-type PostExtend = Post & {
-  categories: Category[];
-  tags: Tag[];
-  author: User;
-};
 
 export default async function PostPage({
   params,
@@ -42,14 +36,6 @@ export default async function PostPage({
     },
   });
 
-  function PostPreview({ post }: { post: PostExtend | null }) {
-    return (
-      <div className="flex flex-col gap-4">
-        <Typography variant="h4">{post?.title}</Typography>
-        <div>{parse(post?.content as string)}</div>
-      </div>
-    );
-  }
 
   return (
     <div>
@@ -96,7 +82,7 @@ export default async function PostPage({
         </div>
       </section>
       {!isEditing ? (
-        <PostPreview post={post} />
+        <PostParser post={post} />
       ) : (
         <AddPostForm
           user={authUser}

@@ -79,7 +79,11 @@ const Tiptap = ({
         heading: false,
       }),
       Underline,
-      Image,
+      Image.configure({
+        HTMLAttributes:{
+          class: "py-2"
+        }
+      }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
