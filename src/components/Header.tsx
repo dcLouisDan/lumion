@@ -42,71 +42,85 @@ function NavLink({
   );
 }
 
+function HeaderNavLinkGroup({
+  isAdmin = false,
+  layoutClasses,
+}: {
+  isAdmin?: boolean;
+  layoutClasses: string;
+}) {
+  return (
+    <nav className={"items-center justify-around gap-3 " + layoutClasses}>
+      <NavLink href="/blogs">blogs</NavLink>
+      <NavLink href="/sketchbook">sketchbook</NavLink>
+      <NavLink href="/about">about</NavLink>
+      {isAdmin && <NavLink href="/dashboard">admin</NavLink>}
+    </nav>
+  );
+}
+
 export default function Header({
   authUser = null,
 }: {
   authUser?: User | null;
 }) {
-  const pathname = usePathname();
-  const authPaths = ["/auth/login", "/auth/signup"];
+  //const pathname = usePathname();
+  //const authPaths = ["/auth/login", "/auth/signup"];
   if (!authUser) {
     return (
-      <header className="flex flex-col sm:flex-row py-6 px-4 sm:px-2 items-center">
-        <div className="flex-1 mb-2 sm:mb-0">
-          <Link href="/">
-            <Button
-              fullWidth={false}
-              className={
-                brandFont.className + " text-2xl sm:text-3xl text-gray-900 "
-              }
-            >
-              Introverted Ink
-            </Button>
-          </Link>
+      <header className="flex flex-col gap-2 py-8 px-4">
+        <div className="flex flex-col sm:flex-row sm:px-2 items-center">
+          <div className="flex-1 mb-2 sm:mb-0">
+            <Link href="/">
+              <Button
+                fullWidth={false}
+                className={
+                  brandFont.className + " text-2xl sm:text-3xl text-gray-900 "
+                }
+              >
+                Introverted Ink
+              </Button>
+            </Link>
+          </div>
+          <HeaderNavLinkGroup layoutClasses="hidden sm:flex" />
         </div>
-        <nav className="flex items-center justify-around gap-3">
-          <NavLink href="/blogs">blogs</NavLink>
-          <NavLink href="/sketchbook">sketchbook</NavLink>
-          <NavLink href="/about">about</NavLink>
-        </nav>
+        <HeaderNavLinkGroup layoutClasses="flex sm:hidden border rounded-lg border-gray-700 px-2" />
       </header>
     );
   } else {
     return (
-      <header className="flex py-8 px-4 sm:px-2 items-center">
-        <div className="flex-1">
-          <Link href="/">
-            <Button
-              fullWidth={false}
-              className={
-                brandFont.className + " text-2xl sm:text-3xl text-gray-900 "
-              }
-            >
-              Introverted Ink
-            </Button>
-          </Link>
-        </div>
-        <div className="flex items-center gap-8">
-          <nav className="sm:flex items-center justify-around gap-3 hidden">
-            <NavLink href="/blogs">blogs</NavLink>
-            <NavLink href="/sketchbook">sketchbook</NavLink>
-            <NavLink href="/about">about</NavLink>
-            <NavLink href="/dashboard">admin</NavLink>
-          </nav>
-          <div className="hidden sm:block">
-            Welcome <span className="font-bold">{authUser.name}</span>
+      <header className="flex py-8 px-4 flex-col gap-2">
+        <div className="flex sm:px-2 items-center">
+          <div className="flex-1">
+            <Link href="/">
+              <Button
+                fullWidth={false}
+                className={
+                  brandFont.className + " text-2xl sm:text-3xl text-gray-900 "
+                }
+              >
+                Introverted Ink
+              </Button>
+            </Link>
           </div>
-          <Link href="#">
-            <Button
-              size="small"
-              variant="outlined"
-              disableElevation
-              onClick={() => signOut({ callbackUrl: "/auth/login" })}
-            >
-              Sign-out
-            </Button>
-          </Link>
+          <div className="flex items-center gap-8">
+            <HeaderNavLinkGroup isAdmin={true} layoutClasses="hidden sm:flex" />
+            <div className="hidden lg:block">
+              Welcome <span className="font-bold">{authUser.name}</span>
+            </div>
+            <Link href="#">
+              <Button
+                size="small"
+                variant="outlined"
+                disableElevation
+                onClick={() => signOut({ callbackUrl: "/auth/login" })}
+              >
+                Sign-out
+              </Button>
+            </Link>
+          </div>
         </div>
+        <HeaderNavLinkGroup isAdmin={true} layoutClasses="flex sm:hidden border rounded-lg border-gray-700 px-2" />
       </header>
     );
   }
