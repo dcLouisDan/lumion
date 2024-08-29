@@ -1,6 +1,6 @@
 // prisma/seed.ts
-import { PrismaClient } from '@prisma/client';
-import { faker } from '@faker-js/faker';
+import { PrismaClient } from "@prisma/client";
+import { faker } from "@faker-js/faker";
 
 const prisma = new PrismaClient();
 
@@ -19,13 +19,23 @@ async function main() {
   //   }
   // })
 
-  for (let i = 0; i < 10; i++) {  // Adjust the number of posts you want to generate
-    const fakeTitle = faker.lorem.sentence() 
+  for (let i = 0; i < 10; i++) {
+    // Adjust the number of posts you want to generate
+    const fakeTitle = faker.lorem.sentence();
     await prisma.post.create({
       data: {
         title: fakeTitle, // Generate a random title
         slug: fakeTitle.toLowerCase().replace(/\s+/g, "-"),
-        content: faker.lorem.paragraphs({min: 4, max: 8}), // Generate random content with 3 paragraphs
+        content: `
+            <p>${faker.lorem.paragraphs({ min: 4, max: 8 })}</p>
+            <br />
+            <p>${faker.lorem.paragraphs({ min: 4, max: 8 })}</p>
+            <br />
+            <p>${faker.lorem.paragraphs({ min: 4, max: 8 })}</p>
+            <br />
+            <p>${faker.lorem.paragraphs({ min: 4, max: 8 })}</p>
+`, // Generate random content with 3 paragraphs
+        createdAt: faker.date.between({ from: '2023-12-01T00:00:00.000Z', to: '2024-08-30T00:00:00.000Z' }),
         authorId: 1, // Set the authorId to 1
         categories: {
           connect: {
