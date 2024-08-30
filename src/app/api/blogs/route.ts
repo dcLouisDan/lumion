@@ -8,6 +8,9 @@ export async function GET(req: NextRequest) {
 
   const skip = (Number(page) - 1) * Number(pageSize);
   const posts = await prisma.post.findMany({
+    where: {
+      published: true,
+    },
     skip,
     take: Number(pageSize),
     include: {
@@ -20,7 +23,11 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  const totalPosts = await prisma.post.count();
+  const totalPosts = await prisma.post.count({
+    where: {
+      published: true,
+    },
+  });
 
   return Response.json({ posts, totalPosts });
 }
