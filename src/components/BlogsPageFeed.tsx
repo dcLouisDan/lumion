@@ -16,7 +16,6 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import axios from "axios";
-import InfiniteScroll from "react-infinite-scroll-component";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
