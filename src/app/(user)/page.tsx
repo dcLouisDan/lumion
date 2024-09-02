@@ -39,7 +39,7 @@ export default async function Home() {
         <h1 className={brandFont.className + " text-xl"}></h1>
         {latestBlogs.map((blog) => {
           return (
-            <Paper variant="outlined" className="p-4">
+            <Paper key={blog.id} variant="outlined" className="p-4">
               <PostParser post={blog} preview={true} />
             </Paper>
           );

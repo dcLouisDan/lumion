@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 function UnauthorizedLayout({ children }: { children: ReactNode }) {
-  return <div className="flex-1">{children}</div>;
+  return <div className="flex-1 px-4">{children}</div>;
 }
 
 export default async function RootLayout({

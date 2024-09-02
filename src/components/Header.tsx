@@ -83,9 +83,9 @@ export default function Header({
               </Button>
             </Link>
           </div>
-          <HeaderNavLinkGroup layoutClasses="hidden sm:flex" />
+          <HeaderNavLinkGroup layoutClasses="hidden md:flex" />
         </div>
-        <HeaderNavLinkGroup layoutClasses="flex sm:hidden border rounded-lg border-gray-700 px-2" />
+        <HeaderNavLinkGroup layoutClasses="flex md:hidden border rounded-lg border-gray-700 px-2" />
       </header>
     );
   } else {
@@ -105,7 +105,7 @@ export default function Header({
             </Link>
           </div>
           <div className="flex items-center gap-8">
-            <HeaderNavLinkGroup isAdmin={true} layoutClasses="hidden sm:flex" />
+            <HeaderNavLinkGroup isAdmin={true} layoutClasses="hidden md:flex" />
             <div className="hidden min-w-52 sm:flex sm:flex-1">
               <SearchInput />
             </div>
@@ -123,7 +123,7 @@ export default function Header({
         </div>
         <HeaderNavLinkGroup
           isAdmin={true}
-          layoutClasses="flex sm:hidden border rounded-lg border-gray-700 px-2"
+          layoutClasses="flex md:hidden border rounded-lg border-gray-700 px-2"
         />
         <div className="flex sm:hidden justify-center">
           <SearchInput />
