@@ -1,12 +1,13 @@
 "use client";
 
 import { brandFont } from "@/lib/theme";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import type { User } from "next-auth";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { ReactNode } from "react";
+import SearchInput from "./SearchInput";
 
 const authButtonGroup = (
   <div className="flex gap-2 py-1">
@@ -89,7 +90,7 @@ export default function Header({
     );
   } else {
     return (
-      <header className="flex py-8 px-4 flex-col gap-2">
+      <header className="flex py-4 sm:py-8 px-4 flex-col gap-2">
         <div className="flex sm:px-2 items-center">
           <div className="flex-1">
             <Link href="/">
@@ -105,8 +106,8 @@ export default function Header({
           </div>
           <div className="flex items-center gap-8">
             <HeaderNavLinkGroup isAdmin={true} layoutClasses="hidden sm:flex" />
-            <div className="hidden lg:block">
-              Welcome <span className="font-bold">{authUser.name}</span>
+            <div className="hidden min-w-52 sm:flex sm:flex-1">
+              <SearchInput />
             </div>
             <Link href="#">
               <Button
@@ -120,7 +121,13 @@ export default function Header({
             </Link>
           </div>
         </div>
-        <HeaderNavLinkGroup isAdmin={true} layoutClasses="flex sm:hidden border rounded-lg border-gray-700 px-2" />
+        <HeaderNavLinkGroup
+          isAdmin={true}
+          layoutClasses="flex sm:hidden border rounded-lg border-gray-700 px-2"
+        />
+        <div className="flex sm:hidden justify-center">
+          <SearchInput />
+        </div>
       </header>
     );
   }

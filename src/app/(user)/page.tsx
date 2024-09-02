@@ -35,7 +35,7 @@ export default async function Home() {
 
   return (
     <section className="px-4 grid gap-8 grid-cols-4 py-4">
-      <div className="col-span-3 flex flex-col gap-4">
+      <div className="col-span-4 sm:col-span-3 flex flex-col gap-4">
         <h1 className={brandFont.className + " text-xl"}></h1>
         {latestBlogs.map((blog) => {
           return (
@@ -45,7 +45,7 @@ export default async function Home() {
           );
         })}
       </div>
-      <div className="flex flex-col gap-4 items-start">
+      <div className="hidden sm:flex flex-col gap-4 items-start">
         <h1 className="font-bold">Browse Blogs</h1>
         {blogs.map((blog) => (
           <Link
