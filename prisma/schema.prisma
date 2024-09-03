@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -21,7 +21,6 @@ model User {
   Post           Post[]
   Comment        Comment[]
   AuditLog       AuditLog[]
-  Media          Media[]
 }
 
 model Post {
@@ -38,7 +37,6 @@ model Post {
   tags       Tag[]      @relation("PostTags")
   categories Category[] @relation("PostCategories")
   comments   Comment[]
-  Media      Media[]
 }
 
 model Tag {
@@ -76,13 +74,3 @@ model AuditLog {
   user      User     @relation(fields: [userId], references: [id])
 }
 
-model Media {
-  id     Int    @id @default(autoincrement())
-  url    String
-  type   String
-  postId Int?
-  userId Int?
-
-  post Post? @relation(fields: [postId], references: [id])
-  user User? @relation(fields: [userId], references: [id])
-}
