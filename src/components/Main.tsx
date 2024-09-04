@@ -25,6 +25,13 @@ const theme = createTheme({
         },
       },
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          fontSize: "inherit",
+        },
+      },
+    },
   },
 });
 

@@ -1,9 +1,25 @@
 "use client";
+import { CommentExtend } from "@/lib/types/modelTypesExtended";
 import { Favorite } from "@mui/icons-material";
-import { IconButton, Link, Paper } from "@mui/material";
-import { Comment } from "@prisma/client";
+import {
+  Avatar,
+  Button,
+  IconButton,
+  Link,
+  Paper,
+  TextField,
+} from "@mui/material";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { comment } from "postcss";
+
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default function PostInteractionsPanels({
   isSignedIn,
@@ -17,11 +33,13 @@ export default function PostInteractionsPanels({
   userId: number | undefined;
   postId: number | undefined;
   likesTotal: number | undefined;
-  comments: Comment[] | undefined;
+  comments: CommentExtend[] | undefined;
   isLikedStatus: boolean | undefined;
 }) {
   const [isLiked, setIsLiked] = useState(isLikedStatus);
   const [totalLikes, setTotalLikes] = useState(likesTotal ?? 0);
+  const [newCommentContent, setNewCommentContent] = useState("");
+  const [postComments, setPostComments] = useState(comments ?? []);
   const likeButtonColor = isLiked ? "text-rose-600" : "";
 
   async function likePost() {
@@ -62,6 +80,54 @@ export default function PostInteractionsPanels({
     }
   }
 
+  function Comment({ comment }: { comment: CommentExtend }) {
+    return (
+      <div className="flex py-3 px-4 gap-2">
+        <Avatar />
+        <div className="flex-1 text-sm">
+          <div className="font-bold">{comment?.user.name}</div>
+          <p className="text-xs text-gray-400">
+            {dayjs(comment.createdAt).fromNow().toString()}
+          </p>
+          <div className="text-sm py-1">{comment.content}</div>
+        </div>
+      </div>
+    );
+  }
+
+  async function handleCommentSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (newCommentContent.trim() === "") return;
+    if (!isSignedIn) return;
+
+    const formData = new FormData();
+    formData.append("userId", String(userId));
+    formData.append("postId", String(postId));
+    formData.append("content", newCommentContent);
+
+    try {
+      const response = await axios.post("/api/comments", formData);
+
+      if (response.data.success) {
+        const comment = response.data.comment;
+        const newComment = {
+          user: comment.user,
+          id: comment.id,
+          content: comment.content,
+          postId: comment.postId,
+          userId: comment.userId,
+          createdAt: comment.createdAt,
+          updatedAt: comment.updatedAt,
+        };
+        setPostComments((prev) => [newComment, ...prev]);
+      } else {
+        console.log("Error: ", response.data.error);
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
+
   return (
     <>
       {!isSignedIn && (
@@ -81,7 +147,7 @@ export default function PostInteractionsPanels({
         </Paper>
       )}
       <Paper variant="outlined" className="flex">
-        <div className="flex items-center">
+        <div className="flex items-center py-2 px-2 border-e">
           <IconButton
             value="like"
             disabled={!isSignedIn}
@@ -97,15 +163,58 @@ export default function PostInteractionsPanels({
             <Favorite fontSize="inherit" color="inherit" />
           </IconButton>
         </div>
-        <div className="px-4 py-2">Likes</div>
+        <div className="px-4 py-2 flex items-center">Likes</div>
         <div className="flex-1 flex justify-end items-center px-4 text-gray-600">
           {totalLikes}
         </div>
       </Paper>
       <Paper variant="outlined">
-        <div className="p-4 border-b border-gray-300">Comments</div>
+        <div className="p-4 border-b border-gray-300 flex items-center">
+          <div>Comments</div>
+          <div className="flex-1 text-end text-gray-600">
+            {postComments.length}
+          </div>
+        </div>
         <div className="flex flex-col">
-          <div className="px-4 py-2">Comment 1</div>
+          {isSignedIn && (
+            <div className="flex border-b w-full min-h-16 items-top py-2 px-2 gap-2">
+              <Avatar />
+              <form
+                className="flex-1 flex flex-col text-sm"
+                onSubmit={handleCommentSubmit}
+              >
+                <TextField
+                  className="py-2"
+                  size="small"
+                  inputProps={{ className: "text-sm" }}
+                  multiline
+                  variant="standard"
+                  placeholder="Add a comment..."
+                  value={newCommentContent}
+                  onChange={(e) => setNewCommentContent(e.target.value)}
+                />
+                <Button
+                  className="w-16 ms-auto"
+                  disableElevation
+                  size="small"
+                  variant="contained"
+                  type="submit"
+                >
+                  Post
+                </Button>
+              </form>
+            </div>
+          )}
+          <div className="grid grid-cols-1 divide-y">
+            {comments?.length === 0 && (
+              <div className="px-2 py-4 text-xs text-gray-500 text-center">
+                There are no comments on this post yet.
+              </div>
+            )}
+            {postComments?.map((comment) => {
+              return <Comment key={comment.id} comment={comment} />;
+            })}
+          </div>
         </div>
       </Paper>
     </>

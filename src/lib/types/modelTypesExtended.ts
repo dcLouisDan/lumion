@@ -5,3 +5,13 @@ export type PostExtend = Post & {
   tags: Tag[];
   author: User;
 };
+
+export type CommentExtend = {
+  user: User;
+  id: number;
+  content: string;
+  postId: number;
+  userId: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
