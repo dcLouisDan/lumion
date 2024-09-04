@@ -22,12 +22,16 @@ export default function PostPreview({
 
   return (
     <div className="flex flex-col gap-4">
-      <Link
-        href={"/blogs/" + post?.slug}
-        className="text-xl sm:text-2xl hover:underline decoration-gray-500 transition-all ease-in-out duration-300 hover:text-gray-500"
-      >
-        {post?.title}
-      </Link>
+      {preview ? (
+        <Link
+          href={"/blogs/" + post?.slug}
+          className="text-xl sm:text-2xl hover:underline decoration-gray-500 transition-all ease-in-out duration-300 hover:text-gray-500"
+        >
+          {post?.title}
+        </Link>
+      ) : (
+        <h1 className="text-xl sm:text-2xl ">{post?.title}</h1>
+      )}
       <p className="text-gray-500 text-xs sm:text-sm">
         By <span className="text-gray-900 font-bold">{post?.author.name}</span>{" "}
         &#183; {dayjs(post?.createdAt).format("MMM D, YYYY").toString()}
