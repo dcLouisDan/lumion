@@ -59,17 +59,15 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const formData = await req.formData();
-    const userId = Number(formData.get("userId"));
-    const postId = Number(formData.get("postId"));
+    const id = Number(formData.get("id"));
 
-    if (!userId || !postId) {
+    if (isNaN(id)) {
       throw new Error("Invalid Request: Insufficient data.");
     }
 
-    await prisma.likes.deleteMany({
+    await prisma.comment.delete({
       where: {
-        userId,
-        postId,
+        id,
       },
     });
 

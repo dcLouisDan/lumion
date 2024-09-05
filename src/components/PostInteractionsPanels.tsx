@@ -1,6 +1,5 @@
 "use client";
 import { CommentExtend } from "@/lib/types/modelTypesExtended";
-import { dayjsExtended } from "@/lib/utils";
 import { Favorite } from "@mui/icons-material";
 import {
   Avatar,
@@ -12,6 +11,8 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { FormEvent, useState } from "react";
+import PostComment from "./PostComment";
+import { useSession } from "next-auth/react";
 
 export default function PostInteractionsPanels({
   isSignedIn,
@@ -28,6 +29,8 @@ export default function PostInteractionsPanels({
   comments: CommentExtend[] | undefined;
   isLikedStatus: boolean | undefined;
 }) {
+  const session = useSession();
+  const user = session.data?.user;
   const [isLiked, setIsLiked] = useState(isLikedStatus);
   const [totalLikes, setTotalLikes] = useState(likesTotal ?? 0);
   const [newCommentContent, setNewCommentContent] = useState("");
@@ -72,21 +75,6 @@ export default function PostInteractionsPanels({
     }
   }
 
-  function Comment({ comment }: { comment: CommentExtend }) {
-    return (
-      <div className="flex py-3 px-4 gap-2">
-        <Avatar />
-        <div className="flex-1 text-sm">
-          <div className="font-bold">{comment?.user.name}</div>
-          <p className="text-xs text-gray-400">
-            {dayjsExtended(comment.createdAt).fromNow().toString()}
-          </p>
-          <div className="text-sm py-1">{comment.content}</div>
-        </div>
-      </div>
-    );
-  }
-
   async function handleCommentSubmit(e: FormEvent) {
     e.preventDefault();
     if (newCommentContent.trim() === "") return;
@@ -118,6 +106,10 @@ export default function PostInteractionsPanels({
     } catch (error) {
       console.error("Error: ", error);
     }
+  }
+
+  function handleCommentDelete(id: number) {
+    setPostComments((prev) => prev.filter((comment) => comment.id !== id));
   }
 
   return (
@@ -204,7 +196,14 @@ export default function PostInteractionsPanels({
               </div>
             )}
             {postComments?.map((comment) => {
-              return <Comment key={comment.id} comment={comment} />;
+              return (
+                <PostComment
+                  isOwner={comment.userId === Number(user?.id)}
+                  key={comment.id}
+                  comment={comment}
+                  onDelete={handleCommentDelete}
+                />
+              );
             })}
           </div>
         </div>
