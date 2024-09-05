@@ -1,4 +1,5 @@
 import { options } from "@/app/api/auth/[...nextauth]/options";
+import BlogRecommendations from "@/components/BlogRecommendations";
 import PostInteractionsPanels from "@/components/PostInteractionsPanels";
 import PostParser from "@/components/PostParser";
 import prisma from "@/lib/db";
@@ -58,6 +59,7 @@ export default async function BlogViewPage({
           postId={post?.id}
           comments={comments}
         />
+        <BlogRecommendations />
       </div>
     </div>
   );

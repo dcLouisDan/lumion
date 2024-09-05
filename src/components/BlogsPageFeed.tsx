@@ -1,6 +1,6 @@
 "use client";
 import { PostExtend } from "@/lib/types/modelTypesExtended";
-import { groupObjectsByKey } from "@/lib/utils";
+import { dayjsExtended, groupObjectsByKey } from "@/lib/utils";
 import {
   Box,
   Button,
@@ -12,12 +12,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 import axios from "axios";
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 export const BlogsPageFeed = () => {
   const [blogs, setBlogs] = useState<Array<PostExtend>>([]);
@@ -55,7 +50,7 @@ export const BlogsPageFeed = () => {
   }, [page]);
 
   const blogsByMonth = groupObjectsByKey(blogs, ({ createdAt }) =>
-    dayjs(createdAt).format("MMMM (YYYY)").toString()
+    dayjsExtended(createdAt).format("MMMM (YYYY)").toString()
   );
   // console.log(blogsByMonth);
 
@@ -97,7 +92,9 @@ export const BlogsPageFeed = () => {
                       {blog?.author.name}
                     </span>{" "}
                     &#183;{" "}
-                    {dayjs(blog?.createdAt).format("MMM D, YYYY").toString()}
+                    {dayjsExtended(blog?.createdAt)
+                      .format("MMM D, YYYY")
+                      .toString()}
                   </p>
                   <div className="grid grid-cols-2 gap-2">
                     {blog?.categories.map((category) => {

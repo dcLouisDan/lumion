@@ -1,24 +1,26 @@
 // prisma/seed.ts
 import { PrismaClient } from "@prisma/client";
 import { faker } from "@faker-js/faker";
+import { Roles } from "@/lib/utils";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  //await prisma.user.upsert({
-  //  where: {
-  //    email: "dan@email.com",
-  //  },
-  //  update: {
-  //    name: "Dan Louis Dela Cruz",
-  //  },
-  //  create: {
-  //    name: "Dan Louis Dela Cruz",
-  //    email: "dan@email.com",
-  //    password: "$2a$10$eAk79r4h1XF2K6Hh1zfdqew.2B1.8YXZDQN1k2rdG4znC1B/wDaju",
-  //  },
-  //});
-  //
+  // await prisma.user.upsert({
+  //   where: {
+  //     email: "dan@email.com",
+  //   },
+  //   update: {
+  //     name: "Dan Louis Dela Cruz",
+  //   },
+  //   create: {
+  //     name: "Dan Louis Dela Cruz",
+  //     email: "dan@email.com",
+  //     password: "$2a$10$eAk79r4h1XF2K6Hh1zfdqew.2B1.8YXZDQN1k2rdG4znC1B/wDaju",
+  //     role: Roles.ADMIN,
+  //   },
+  // });
+
   //await prisma.category.createMany({
   //  data: [
   //    { name: "Daily Reflections" },

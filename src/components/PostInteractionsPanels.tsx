@@ -1,5 +1,6 @@
 "use client";
 import { CommentExtend } from "@/lib/types/modelTypesExtended";
+import { dayjsExtended } from "@/lib/utils";
 import { Favorite } from "@mui/icons-material";
 import {
   Avatar,
@@ -11,15 +12,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { FormEvent, useState } from "react";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { comment } from "postcss";
-
-dayjs.extend(relativeTime);
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 export default function PostInteractionsPanels({
   isSignedIn,
@@ -87,7 +79,7 @@ export default function PostInteractionsPanels({
         <div className="flex-1 text-sm">
           <div className="font-bold">{comment?.user.name}</div>
           <p className="text-xs text-gray-400">
-            {dayjs(comment.createdAt).fromNow().toString()}
+            {dayjsExtended(comment.createdAt).fromNow().toString()}
           </p>
           <div className="text-sm py-1">{comment.content}</div>
         </div>

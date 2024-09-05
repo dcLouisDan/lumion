@@ -17,7 +17,7 @@ const anton = Anton({ subsets: ["latin"], weight: ["400"] });
 export default async function SignupPage() {
   const session = await getServerSession(options);
   if (session) {
-    redirect("/dashboard");
+    redirect("/");
   }
   return (
     <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 h-full px-1 sm:px-5">
