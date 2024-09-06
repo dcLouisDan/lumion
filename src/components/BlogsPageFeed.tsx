@@ -77,16 +77,26 @@ export const BlogsPageFeed = () => {
                 <Paper
                   elevation={0}
                   variant="outlined"
-                  className="p-4 flex flex-col gap-4 overflow-auto h-full"
+                  className="flex flex-col gap-4 overflow-auto h-full pb-4"
                   sx={{
                     bgcolor: "inherit",
                   }}
                 >
-                  <Typography className="text-xl flex-1 text-center">
+                  <div>
+                    {blog?.coverPicture !== null &&
+                      blog?.coverPicture !== "" && (
+                        <img
+                          src={blog.coverPicture.toString()}
+                          alt="cover picture"
+                          className="rounded-sm max-h-36 object-cover w-full"
+                        />
+                      )}
+                  </div>
+                  <Typography className="px-4 text-xl flex-1 text-center">
                     "{blog.title}"
                   </Typography>
 
-                  <p className="text-gray-500 text-sm">
+                  <p className="text-gray-500 text-sm px-4">
                     By{" "}
                     <span className="text-gray-900 font-bold">
                       {blog?.author.name}
@@ -96,7 +106,7 @@ export const BlogsPageFeed = () => {
                       .format("MMM D, YYYY")
                       .toString()}
                   </p>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2 px-4">
                     {blog?.categories.map((category) => {
                       return (
                         <Chip

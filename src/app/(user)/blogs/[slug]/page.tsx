@@ -1,7 +1,7 @@
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import BlogRecommendations from "@/components/BlogRecommendations";
 import PostInteractionsPanels from "@/components/PostInteractionsPanels";
-import PostParser from "@/components/PostParser";
+import PostPreview from "@/components/PostPreview";
 import prisma from "@/lib/db";
 import { CommentExtend } from "@/lib/types/modelTypesExtended";
 import { getServerSession } from "next-auth";
@@ -48,7 +48,7 @@ export default async function BlogViewPage({
   return (
     <div className="grid gap-4 grid-cols-1 md:grid-cols-4">
       <div className="col-span-3 px-2 sm:px-4">
-        <PostParser post={post} />
+        <PostPreview post={post} />
       </div>
       <div className="flex flex-col gap-4">
         <PostInteractionsPanels

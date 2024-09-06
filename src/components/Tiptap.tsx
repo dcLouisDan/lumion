@@ -80,9 +80,9 @@ const Tiptap = ({
       }),
       Underline,
       Image.configure({
-        HTMLAttributes:{
-          class: "py-2"
-        }
+        HTMLAttributes: {
+          class: "py-2 w-full px-4 sm:px-10 rounded-lg overflow-hidden",
+        },
       }),
       TextAlign.configure({
         types: ["heading", "paragraph"],

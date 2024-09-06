@@ -25,15 +25,16 @@ model User {
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  slug      String   @unique
-  content   String
-  authorId  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  published Boolean  @default(false)
-  likes     Likes[]
+  id           Int      @id @default(autoincrement())
+  title        String
+  slug         String   @unique
+  content      String
+  coverPicture String?
+  authorId     Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  published    Boolean  @default(false)
+  likes        Likes[]
 
   author     User       @relation(fields: [authorId], references: [id])
   tags       Tag[]      @relation("PostTags")

@@ -22,7 +22,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import axios from "axios";
-import PostParser from "./PostParser";
+import PostPreview from "./PostPreview";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -36,7 +36,7 @@ export default function SearchResultsFeed({ search }: { search: string }) {
   async function fetchPosts() {
     await axios
       .get(
-        `/api/searchResults?page=${page}&pageSize=${rowsPerPage}&search=${search}`,
+        `/api/searchResults?page=${page}&pageSize=${rowsPerPage}&search=${search}`
       )
       .then((res) => {
         setBlogs(res.data.posts);
@@ -119,7 +119,7 @@ export default function SearchResultsFeed({ search }: { search: string }) {
         {blogs.map((blog) => {
           return (
             <Paper key={blog.id} variant="outlined" className="p-4">
-              <PostParser preview={true} post={blog} />
+              <PostPreview preview={true} post={blog} />
             </Paper>
           );
         })}

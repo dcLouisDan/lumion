@@ -1,5 +1,5 @@
 import BlogRecommendations from "@/components/BlogRecommendations";
-import PostParser from "@/components/PostParser";
+import PostPreview from "@/components/PostPreview";
 import prisma from "@/lib/db";
 import { brandFont } from "@/lib/theme";
 import { Paper } from "@mui/material";
@@ -25,7 +25,7 @@ export default async function Home() {
         {latestBlogs.map((blog) => {
           return (
             <Paper key={blog.id} variant="outlined" className="p-4">
-              <PostParser post={blog} preview={true} />
+              <PostPreview post={blog} preview={true} />
             </Paper>
           );
         })}

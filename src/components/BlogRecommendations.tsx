@@ -24,7 +24,7 @@ export default async function BlogRecommendations() {
       variant="outlined"
       className="hidden divide-y sm:flex flex-col items-start h-fit"
     >
-      <h1 className="font-bold p-4">Latest Blogs</h1>
+      <h1 className="font-bold p-4">Browse Blogs</h1>
       {blogs.map((blog) => (
         <Link
           href={`/blogs/${blog?.slug}`}

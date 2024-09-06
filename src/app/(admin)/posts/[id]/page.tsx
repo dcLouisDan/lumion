@@ -8,8 +8,7 @@ import Link from "next/link";
 import React from "react";
 import { Edit, Visibility } from "@mui/icons-material";
 import DeleteButtonWithModal from "@/components/DeleteButtonWithModal";
-import PostParser from "@/components/PostParser";
-
+import PostPreview from "@/components/PostPreview";
 
 export default async function PostPage({
   params,
@@ -35,7 +34,6 @@ export default async function PostPage({
       tags: true,
     },
   });
-
 
   return (
     <div>
@@ -82,7 +80,7 @@ export default async function PostPage({
         </div>
       </section>
       {!isEditing ? (
-        <PostParser post={post} />
+        <PostPreview post={post} />
       ) : (
         <AddPostForm
           user={authUser}

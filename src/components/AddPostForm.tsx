@@ -8,6 +8,7 @@ import Tiptap from "./Tiptap";
 import { addNewPost, updatePost } from "@/actions/post-actions";
 import parse from "html-react-parser";
 import { useRouter } from "next/navigation";
+import PostPreview from "./PostPreview";
 
 export default function AddPostForm({
   user,
@@ -33,6 +34,7 @@ export default function AddPostForm({
           title: "",
           slug: "",
           content: "",
+          coverPicture: null,
           author: {
             connect: {
               id: user?.id ? Number(user?.id) : 1,
@@ -43,6 +45,7 @@ export default function AddPostForm({
           title: postData?.title,
           slug: postData?.slug,
           content: postData?.content,
+          coverPicture: postData?.coverPicture,
           author: {
             connect: {
               id: user?.id ? Number(user?.id) : postData?.authorId,
@@ -71,6 +74,7 @@ export default function AddPostForm({
         ...prevState,
         [e.target?.name]: e.target.value,
       };
+      if (e.target.name === "coverPicture") return updatedFields;
 
       validateField(e.target.name, e.target.value);
       return updatedFields;
@@ -117,6 +121,9 @@ export default function AddPostForm({
             id: user?.id ? Number(user?.id) : 1,
           },
         },
+        coverPicture: !fields.coverPicture
+          ? null
+          : (fields.coverPicture as string),
         slug: fields.title.toString().toLowerCase().replace(/\s+/g, "-"),
         content: content,
         categories: {
@@ -154,6 +161,9 @@ export default function AddPostForm({
           },
           slug: fields.title.toString().toLowerCase().replace(/\s+/g, "-"),
           content: content,
+          coverPicture: !fields.coverPicture
+            ? null
+            : (fields.coverPicture as string),
           categories: {
             connect: chosenCategories,
             disconnect: removedCategories,
@@ -234,6 +244,16 @@ export default function AddPostForm({
         label="Tags"
         id="post-tags"
       />
+      <TextField
+        variant="outlined"
+        id="coverPhoto"
+        size="small"
+        label="Cover Photo (optional)"
+        name="coverPicture"
+        value={fields.coverPicture}
+        fullWidth
+        onChange={handleFormInputChange}
+      />
       <div>
         <h2 className="mb-2">Content</h2>
         <Tiptap defaulContent={content ?? ""} setContent={setContent} />
@@ -247,6 +267,13 @@ export default function AddPostForm({
         <h2 className="mb-2">Preview:</h2>
         {/* <div>{content}</div> */}
         <div className="border border-gray-300 rounded-sm p-4">
+          {fields.coverPicture !== null && fields.coverPicture !== "" && (
+            <img
+              src={fields.coverPicture?.toString()}
+              alt="preview cover image"
+              className="max-h-96 w-full object-cover rounded-lg mb-5"
+            />
+          )}
           {parse(content)}
         </div>
       </div>

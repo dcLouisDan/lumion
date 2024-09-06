@@ -22,6 +22,13 @@ export default function PostPreview({
 
   return (
     <div className="flex flex-col gap-4">
+      {!preview && post?.coverPicture !== null && post?.coverPicture !== "" && (
+        <img
+          src={post?.coverPicture.toString()}
+          alt="cover picture"
+          className="max-h-96 w-full object-cover rounded-lg"
+        />
+      )}
       {preview ? (
         <Link
           href={"/blogs/" + post?.slug}
